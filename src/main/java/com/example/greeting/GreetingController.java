@@ -12,12 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/greeting")
 public class GreetingController {
-	private static final String template = "Hello, %s!";
-    private final AtomicLong counter = new AtomicLong();
 
-    @ResponseBody
-    @RequestMapping(method = GET, produces = "application/json")       
-    public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
-        return new Greeting(counter.incrementAndGet(), String.format(template, name));
+    @RequestMapping(method = GET)       
+    public String greeting() {
+        return "ss";
     }
 }
