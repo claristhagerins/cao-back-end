@@ -144,8 +144,6 @@ public class RelationshipController {
 			friend.setStatusUserTwo(0);
 		}
 		
-		System.out.println(friend.toString());
-		
 		rsrv.deleteFriend(friend);
 		
 		return "Friend Deleted";
