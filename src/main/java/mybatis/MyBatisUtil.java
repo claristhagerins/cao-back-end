@@ -1,7 +1,6 @@
 package mybatis;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 
 import org.apache.ibatis.io.Resources;
@@ -15,13 +14,13 @@ public class MyBatisUtil {
 	}
 
 	static {
-		InputStream inputStream = null;
+		Reader reader = null;
 		try {
-			inputStream = Resources.getResourceAsStream("mybatis/mybatis-config.xml");
+			reader = Resources.getResourceAsReader("mybatis/mybatis-config.xml");
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		factory = new SqlSessionFactoryBuilder().build(inputStream);
+		factory = new SqlSessionFactoryBuilder().build(reader);
 	}
 
 	public static SqlSessionFactory getSqlSessionFactory() {
