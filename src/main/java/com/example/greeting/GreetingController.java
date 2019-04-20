@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/greeting")
 public class GreetingController {
 
-    @RequestMapping(method = GET)       
+    @RequestMapping("")       
     public String greeting() {
         return "ss";
     }
