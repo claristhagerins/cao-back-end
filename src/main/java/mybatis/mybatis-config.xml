@@ -30,7 +30,7 @@
 		<mapper resource="cao/pollparticipant/PollParticipantMapper.xml" />
 		<mapper resource="cao/polllocation/PollLocationMapper.xml" />
 		<mapper resource="cao/polldatetime/PollDateTimeMapper.xml" />
-		<mapper resource="cao/pollquestion/PolLQuestionMapper.xml" />
+		<mapper resource="cao/pollquestion/PollQuestionMapper.xml" />
 		<mapper resource="cao/choice/ChoiceMapper.xml" />
 		<mapper resource="cao/pollbridge/PollBridgeMapper.xml" />
 	</mappers>
