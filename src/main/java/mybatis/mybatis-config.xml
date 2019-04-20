@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<properties resource="mybatis/jdbc.properties" />
+	<typeAliases>
+		<typeAlias type="cao.user.User" alias="User"></typeAlias>
+		<typeAlias type="cao.events.Events" alias="Events"></typeAlias>
+		<typeAlias type="cao.relationship.Relationship" alias="Relationship"></typeAlias>
+		<typeAlias type="cao.pollbridge.PollBridge" alias="PollBridge"></typeAlias>		
+	</typeAliases>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driverClassName}" />
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="cao/user/UserMapper.xml" />
+		<mapper resource="cao/events/EventsMapper.xml" />
+		<mapper resource="cao/relationship/RelationshipMapper.xml" />
+		<mapper resource="cao/pollparticipant/PollParticipantMapper.xml" />
+		<mapper resource="cao/polllocation/PollLocationMapper.xml" />
+		<mapper resource="cao/polldatetime/PollDateTimeMapper.xml" />
+		<mapper resource="cao/pollquestion/PolLQuestionMapper.xml" />
+		<mapper resource="cao/choice/ChoiceMapper.xml" />
+		<mapper resource="cao/pollbridge/PollBridgeMapper.xml" />
+	</mappers>
+</configuration>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cao.events.EventsMapper">
+	<!-- <select id="getUserById" parameterType="int"
+		resultType="com.sivalabs.mybatisdemo.domain.User">
+		SELECT
+		user_id as userId,
+		email_id as emailId ,
+		password,
+		first_name as firstName,
+		last_name as lastName
+		FROM USER
+		WHERE USER_ID = #{userId}
+	</select> -->
+	<!-- Instead of referencing Fully Qualified Class Names we can register 
+		Aliases in mybatis-config.xml and use Alias names. -->	
+	<select id="getEventId" parameterType="String" resultType="String">
+		select GET_ID(#{prefix}) as event_id
+	</select>
+	
+	<insert id="insertEvent" parameterType="Events" statementType="CALLABLE">
+		INSERT INTO EVENTS(EVENT_ID, EVENT_NAME, EVENT_DESCRIPTION, POLL_STATUS, POLL_CONDITION, CREATED_BY, DATE_CREATED)
+		VALUES(#{eventId}, #{eventName}, #{eventDescription}, #{pollStatus}, #{pollCondition},
+		#{eventCreatedBy}, now())
+	</insert>
+	
+	<resultMap type="Events" id="EventsResult">
+		<result property="eventId" column="event_id" />
+		<result property="eventName" column="event_name" />
+		<result property="eventDescription" column="event_description" />
+		<result property="pollStatus" column="poll_status" />
+		<result property="pollCondition" column="poll_condition" />
+	</resultMap>
+		
+	<select id="getEventList" parameterType="String" resultMap="EventsResult">
+		SELECT PP.POLL_PARTICIPANT_ID, E.EVENT_ID, E.EVENT_NAME,
+			E.EVENT_DESCRIPTION, E.POLL_STATUS, E.POLL_CONDITION
+		FROM POLL_PARTICIPANT PP
+			LEFT OUTER JOIN POLL_BRIDGE PB ON (PP.POLL_PARTICIPANT_ID=PB.POLL_PARTICIPANT_ID)
+			LEFT OUTER JOIN EVENTS E ON (PB.EVENT_ID=E.EVENT_ID)
+		WHERE PP.USER_ID=#{userId}	
+		<if test="eventName != null and eventName != ''">
+			AND upper(E.EVENT_NAME) like upper('%' || (#{eventName}) || '%')
+		</if>
+		<if test="eventDescription != null and eventName != ''">
+			AND upper(E.EVENT_DESCRIPTION) like upper('%' || #{eventDescription} || '%' )
+		</if>
+	</select>
+		
+	<resultMap type="HashMap" id="EventDetailResult">
+		<result property="Event Name" column="event_name" />
+		<result property="Event Description" column="event_description" />
+		<result property="Event Status" column="poll_status" />
+		<result property="Event Condition" column="poll_condition" />
+		<result property="Created By" column="created_by" />
+		<result property="Date Created" column="date_created" />
+		<result property="Participants" column="participant_list" />
+		<result property="Locations" column="location_list" />
+		<result property="Date Choice" column="event_date_list" />
+		<result property="Question" column="question" />
+		<result property="Choices" column="choice_list" />
+	</resultMap>
+	
+	<select id="getEventDetailByEventId" parameterType="String" resultMap="EventDetailResult">
+		select distinct e.event_name, e.event_description, 
+		(case when e.poll_status = 'P' then 'Public' when e.poll_status = 'F' then 'Private' end) as poll_status,
+		e.poll_condition, e.created_by, 
+(select to_char(date_created, 'dd-Mon-yyyy') from events ea where ea.event_id = e.event_id) as date_created,
+		(select string_agg(user_name, ',') from ms_user mu, poll_participant ppa 
+		where ppa.user_id = mu.user_id and ppa.poll_participant_id = pp.poll_participant_id  
+		group by ppa.poll_participant_id) 
+		as participant_list,
+		(select string_agg(location_name||' ('||(case when location_contact='' then 'no contact' else location_contact end)||')', ', ') 
+		 from poll_location pla
+		where pla.poll_location_id = pl.poll_location_id group by pla.poll_location_id) 
+		as location_list,
+		(select string_agg(to_char(event_date, 'dd-Mon-yyyy'), ', ') from poll_date_time pdta 
+		where pdta.poll_date_time_id = pdt.poll_date_time_id  
+		group by pdta.poll_date_time_id) 
+		as event_date_list, pq.question, 
+		(select string_agg(choice_name, ', ') 
+		 from choice ca
+		where ca.poll_question_id = c.poll_question_id group by ca.poll_question_id) 
+		as choice_list
+		from poll_bridge pb, events e, poll_participant pp, poll_location pl, poll_date_time pdt, poll_question pq, choice c
+		where pb.event_id = e.event_id and pb.poll_participant_id = pp.poll_participant_id and pb.poll_location_id = pl.poll_location_id 
+		and pb.poll_date_time_id = pdt.poll_date_time_id and pb.poll_question_id = pq.poll_question_id
+		and pb.poll_question_id = c.poll_question_id and e.event_id = #{eventId};
+		<!-- select event_id, event_name, event_description, poll_status, poll_condition from events where event_id = (#{eventId}) -->
+	</select>
+	
+	<resultMap type="PollBridge" id="PollBridgeResult">
+		<result property="pollBridgeId" column="poll_bridge_id" />
+		<result property="eventId" column="event_id" />
+		<result property="pollParticipationId" column="poll_participant_id" />
+		<result property="pollLocationId" column="poll_location_id" />
+		<result property="pollDateTimeId" column="poll_date_time_id" />
+		<result property="pollQuestionId" column="poll_question_id" />
+	</resultMap>
+	
+	<select id="getEventBridge" parameterType="String" resultMap="PollBridgeResult">
+		select poll_bridge_id, event_id, poll_participant_id, poll_location_id, poll_date_time_id, poll_question_id 
+		from poll_bridge
+		where event_id=#{eventId}
+	</select>
+	
+	<delete id="deleteEvent" parameterType="String" statementType="CALLABLE">
+		delete from events where event_id=#{eventId}
+	</delete>
+	
+	<delete id="deletePollParticipant" parameterType="String" statementType="CALLABLE">
+		delete from poll_participant where poll_participant_id=#{pollParticipantId}
+	</delete>
+	
+	<delete id="deletePollLocation" parameterType="String" statementType="CALLABLE">
+		delete from poll_location where poll_location_id=#{pollLocationId}
+	</delete>
+	
+	<delete id="deletePollDateTime" parameterType="String" statementType="CALLABLE">
+		delete from poll_date_time where poll_date_time_id=#{pollDateTimeId}
+	</delete>
+	
+	<delete id="deletePollQuestion" parameterType="String" statementType="CALLABLE">
+		delete from poll_question where poll_question_id=#{pollQuestionId}
+	</delete>
+	
+	<delete id="deletePollChoice" parameterType="String" statementType="CALLABLE">
+		delete from choice where poll_question_id=#{pollQuestionId}
+	</delete>
+	
+	<delete id="deletePollBridge" parameterType="String" statementType="CALLABLE">
+		delete from poll_bridge where poll_bridge_id=#{pollBridgeId}
+	</delete>
+</mapper>

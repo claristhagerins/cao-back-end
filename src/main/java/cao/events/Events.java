@@ -1,0 +1,77 @@
+package cao.events;
+
+import cao.Base;
+
+public class Events extends Base {
+	private String eventId;
+	private String eventName;
+	private String eventDescription;
+	private String pollStatus;
+	private String dateCreated;
+	private String createdBy;
+	private String pollCondition;
+
+	@Override
+	public String toString() {
+		return "Events [eventId=" + eventId + ", eventName=" + eventName + ", eventDescription=" + eventDescription
+				+ ", pollStatus=" + pollStatus + ", dateCreated=" + dateCreated + ", createdBy=" + createdBy
+				+ ", pollCondition=" + pollCondition + "]";
+	}
+
+	public String getPollCondition() {
+		return pollCondition;
+	}
+
+	public void setPollCondition(String pollCondition) {
+		this.pollCondition = pollCondition;
+	}
+
+	public String getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
+	}
+
+	public String getEventName() {
+		return eventName;
+	}
+
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
+	}
+
+	public String getEventDescription() {
+		return eventDescription;
+	}
+
+	public void setEventDescription(String eventDescription) {
+		this.eventDescription = eventDescription;
+	}
+
+	public String getPollStatus() {
+		return pollStatus;
+	}
+
+	public void setPollStatus(String pollStatus) {
+		this.pollStatus = pollStatus;
+	}
+
+	public String getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+}
