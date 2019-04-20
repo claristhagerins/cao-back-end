@@ -1,4 +1,4 @@
-package cao.greeting;
+package com.example.greeting;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
