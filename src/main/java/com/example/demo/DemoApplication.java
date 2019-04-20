@@ -15,13 +15,13 @@ public class DemoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
-	@RestController
 	
+	@RestController
 	class HelloRestController {
-    @GetMapping("/")
-    public String hello() {
-        return "Hello World!";
-    }
-}
+		@GetMapping("/")
+		public String hello() {
+			return "Hello World!";
+		}
+	}
 
 }
