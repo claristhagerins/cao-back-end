@@ -22,8 +22,7 @@ public class EventsService {
 		}
 	}
 
-	public void insertEvent(String eventId, String eventName, String eventDescription, 
-			String pollStatus, String pollCondition, String eventCreatedBy) {
+	public void insertEvent(String eventId, String eventName, String eventDescription, String pollStatus, String pollCondition, String eventCreatedBy) {
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
 		try {
 			EventsMapper eventMapper = sqlSession.getMapper(EventsMapper.class);

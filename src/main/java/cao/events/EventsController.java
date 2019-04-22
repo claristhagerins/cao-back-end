@@ -63,16 +63,17 @@ public class EventsController {
 		return listResultJson;
 	}
 
-	@PostMapping(value = "/showEventDetail")
-	public @ResponseBody String showEventDetail(@RequestBody Events events) {
+	@PostMapping(value = "/showEventDetail")	
+	public @ResponseBody String showEventDetail(@RequestBody Events events ) {
 		HashMap<String, String> event = null;
 		EventsService esrv = new EventsService();
 		List<Events> listEvents = null;
-		String listResultJson = null;
+		String listResultJson=null;
 		ObjectMapper mapper = JsonFactory.create();
 
+//		HashMap<String, String> mapEvents = esrv.getEventDetailByEventId(events.getEventId());
 		listEvents = esrv.getEventDetailByEventId(events.getEventId());
-
+		
 		listResultJson = mapper.writeValueAsString(listEvents);
 		return listResultJson;
 	}

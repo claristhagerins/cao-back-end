@@ -32,11 +32,12 @@
 		<result property="eventDescription" column="event_description" />
 		<result property="pollStatus" column="poll_status" />
 		<result property="pollCondition" column="poll_condition" />
+		<result property="createdBy" column="created_by" />
 	</resultMap>
 		
 	<select id="getEventList" parameterType="String" resultMap="EventsResult">
 		SELECT PP.POLL_PARTICIPANT_ID, E.EVENT_ID, E.EVENT_NAME,
-			E.EVENT_DESCRIPTION, E.POLL_STATUS, E.POLL_CONDITION
+			E.EVENT_DESCRIPTION, E.POLL_STATUS, E.POLL_CONDITION, E.CREATED_BY
 		FROM POLL_PARTICIPANT PP
 			LEFT OUTER JOIN POLL_BRIDGE PB ON (PP.POLL_PARTICIPANT_ID=PB.POLL_PARTICIPANT_ID)
 			LEFT OUTER JOIN EVENTS E ON (PB.EVENT_ID=E.EVENT_ID)
@@ -48,7 +49,7 @@
 			AND upper(E.EVENT_DESCRIPTION) like upper('%' || #{eventDescription} || '%' )
 		</if>
 	</select>
-		
+	
 	<resultMap type="HashMap" id="EventDetailResult">
 		<result property="Event Name" column="event_name" />
 		<result property="Event Description" column="event_description" />
@@ -67,7 +68,7 @@
 		select distinct e.event_name, e.event_description, 
 		(case when e.poll_status = 'P' then 'Public' when e.poll_status = 'F' then 'Private' end) as poll_status,
 		e.poll_condition, e.created_by, 
-(select to_char(date_created, 'dd-Mon-yyyy') from events ea where ea.event_id = e.event_id) as date_created,
+		(select to_char(date_created, 'dd-Mon-yyyy') from events ea where ea.event_id = e.event_id) as date_created,
 		(select string_agg(user_name, ',') from ms_user mu, poll_participant ppa 
 		where ppa.user_id = mu.user_id and ppa.poll_participant_id = pp.poll_participant_id  
 		group by ppa.poll_participant_id) 
