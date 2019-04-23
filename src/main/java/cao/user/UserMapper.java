@@ -16,4 +16,9 @@ public interface UserMapper {
 	public String getPasswordByEmail(String email);
 	public void updateUser(User user);
 	public void deleteUser(Integer userId);
+	public int checkUserName(String userNameBaru);
+	public int checkRelationship(String userNameLama);
+	public void updateUsername(User user);
+	public void updateRelationshipUserOne(User user);
+	public void updateRelationshipUserTwo(User user);
 }

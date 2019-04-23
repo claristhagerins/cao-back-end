@@ -8,7 +8,7 @@ import cao.user.UserMapper;
 import mybatis.MyBatisUtil;
 
 public class UserService {
-	//done
+	// done
 	public String getUserId(String prefix) {
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
 		try {
@@ -18,8 +18,8 @@ public class UserService {
 			sqlSession.close();
 		}
 	}
-	
-	//done
+
+	// done
 	public void insertUser(User user) {
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
 		try {
@@ -41,7 +41,7 @@ public class UserService {
 			sqlSession.close();
 		}
 	}
-	
+
 	public boolean isLoggedIn(User user) {
 		boolean bool;
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -54,7 +54,7 @@ public class UserService {
 		}
 		return bool;
 	}
-	
+
 	public void getParticipantList(User user) {
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
 		try {
@@ -75,7 +75,7 @@ public class UserService {
 			sqlSession.close();
 		}
 	}
-	
+
 	public List<User> getUserByUsername(String userName) {
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
 		try {
@@ -85,8 +85,8 @@ public class UserService {
 			sqlSession.close();
 		}
 	}
-	
-	//Added by RED : 02-Mar-2019
+
+	// Added by RED : 02-Mar-2019
 	public List<User> getUserByEmail(String email) {
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
 		try {
@@ -96,9 +96,9 @@ public class UserService {
 			sqlSession.close();
 		}
 	}
-	//End - Added by RED : 02-Mar-2019
+	// End - Added by RED : 02-Mar-2019
 
-	//Added by RED : 02-Mar-2019
+	// Added by RED : 02-Mar-2019
 	public String getPasswordByEmail(String email) {
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
 		try {
@@ -108,7 +108,7 @@ public class UserService {
 			sqlSession.close();
 		}
 	}
-	//End - Added by RED : 02-Mar-2019
+	// End - Added by RED : 02-Mar-2019
 
 	public List<User> getListUser() {
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -142,5 +142,48 @@ public class UserService {
 			sqlSession.close();
 		}
 
+	}
+
+	public int checkUserName(String userNameBaru) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+			return userMapper.checkUserName(userNameBaru);
+		} finally {
+			sqlSession.close();
+		}
+	}
+
+	public int checkRelationship(String userNameLama) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+			return userMapper.checkRelationship(userNameLama);
+		} finally {
+			sqlSession.close();
+		}
+	}
+
+	public void updateUsername(User user) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+			userMapper.updateUsername(user);
+			sqlSession.commit();
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	public void updateRelationship(User user) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+			userMapper.updateRelationshipUserOne(user);
+			userMapper.updateRelationshipUserTwo(user);
+			sqlSession.commit();
+		} finally {
+			sqlSession.close();
+		}
 	}
 }

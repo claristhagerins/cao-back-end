@@ -10,15 +10,20 @@
 	</resultMap>
 		
 	<select id="getFriendList" parameterType="String" resultMap="FriendsResult">
-		select user_two_name as friend_name, user_two_id as friend_id 
-		from relationship where user_one_id=#{userId} and status_user_one='1' 
+		select R.user_two_id as friend_id, U.user_name as friend_name 
+		from relationship R
+		left outer join ms_user U on (R.user_two_id=U.user_id)
+		where R.user_one_id=#{userId} and R.status_user_one='1'
 		<if test="friendName != null and friendName != ''">
-		and upper(user_two_name) like upper('%' || (#{friendName}) || '%')
+		and upper(R.user_two_name) like upper('%' || (#{friendName}) || '%')
 		</if>
 		union
-		select user_one_name, user_one_id from relationship where user_two_id=#{userId} and status_user_two='1'
+		select R.user_one_id as friend_id, U.user_name as friend_name 
+		from relationship R
+		left outer join ms_user U on (R.user_one_id=U.user_id)		
+		where R.user_two_id=#{userId} and R.user_two_id='1'
 		<if test="friendName != null and friendName != ''">
-		and upper(user_one_name) like upper('%' || (#{friendName}) || '%')
+		and upper(R.user_one_name) like upper('%' || (#{friendName}) || '%')
 		</if>
 	</select>
 

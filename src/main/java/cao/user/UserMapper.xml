@@ -59,4 +59,33 @@
 		IS_LOGGED_IN='1'
 		WHERE USER_ID = #{userId}
 	</update>
+	
+	<select id="checkUserName" parameterType="String" resultType="int">
+		select count(1) from ms_user where user_name=#{userNameBaru}
+	</select>
+	
+	<select id="checkRelationship" parameterType="String" resultType="int">
+		select 
+		(select count(1) from relationship where user_one_name=#{userNameLama})+
+		(select count(1) from relationship where user_two_name=#{userNameLama})
+		as jumlah
+	</select>
+	
+	<update id="updateUsername" parameterType="User" statementType="CALLABLE">
+		update ms_user 
+		set user_name=#{userNameBaru} 
+		where user_name=#{userName}
+	</update>
+	
+	<update id="updateRelationshipUserOne" parameterType="User" statementType="CALLABLE">
+		update relationship
+		set user_one_name=#{userNameBaru}
+		where user_one_name=#{userName}
+	</update>
+	
+	<update id="updateRelationshipUserTwo" parameterType="User" statementType="CALLABLE">
+		update relationship
+		set user_two_name=#{userNameBaru}
+		where user_two_name=#{userName}
+	</update>
 </mapper>

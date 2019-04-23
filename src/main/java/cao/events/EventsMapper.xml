@@ -51,17 +51,17 @@
 	</select>
 	
 	<resultMap type="HashMap" id="EventDetailResult">
-		<result property="Event Name" column="event_name" />
-		<result property="Event Description" column="event_description" />
-		<result property="Event Status" column="poll_status" />
-		<result property="Event Condition" column="poll_condition" />
-		<result property="Created By" column="created_by" />
-		<result property="Date Created" column="date_created" />
-		<result property="Participants" column="participant_list" />
-		<result property="Locations" column="location_list" />
-		<result property="Date Choice" column="event_date_list" />
-		<result property="Question" column="question" />
-		<result property="Choices" column="choice_list" />
+		<result property="eventName" column="event_name" />
+		<result property="eventDescription" column="event_description" />
+		<result property="eventStatus" column="poll_status" />
+		<result property="eventCondition" column="poll_condition" />
+		<result property="createdBy" column="created_by" />
+		<result property="dateCreated" column="date_created" />
+		<result property="participants" column="participant_list" />
+		<result property="locations" column="location_list" />
+		<result property="dateChoice" column="event_date_list" />
+		<result property="question" column="question" />
+		<result property="choices" column="choice_list" />
 	</resultMap>
 	
 	<select id="getEventDetailByEventId" parameterType="String" resultMap="EventDetailResult">
@@ -88,7 +88,7 @@
 		from poll_bridge pb, events e, poll_participant pp, poll_location pl, poll_date_time pdt, poll_question pq, choice c
 		where pb.event_id = e.event_id and pb.poll_participant_id = pp.poll_participant_id and pb.poll_location_id = pl.poll_location_id 
 		and pb.poll_date_time_id = pdt.poll_date_time_id and pb.poll_question_id = pq.poll_question_id
-		and pb.poll_question_id = c.poll_question_id and e.event_id = #{eventId};
+		and pb.poll_question_id = c.poll_question_id and e.event_id = #{eventId}
 		<!-- select event_id, event_name, event_description, poll_status, poll_condition from events where event_id = (#{eventId}) -->
 	</select>
 	

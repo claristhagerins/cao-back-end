@@ -5,6 +5,7 @@ import cao.Base;
 public class User extends Base {
 	private String userId;
 	private String userName;
+	private String userNameBaru;
 	private String email;
 	private String password;
 	private String roleId;
@@ -15,9 +16,17 @@ public class User extends Base {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", userName=" + userName + ", email=" + email + ", password=" + password
-				+ ", roleId=" + roleId + ", isLoggedIn=" + isLoggedIn + ", dateCreated=" + dateCreated + ", status="
-				+ status + ", friendStatus=" + friendStatus + "]";
+		return "User [userId=" + userId + ", userName=" + userName + ", userNameBaru=" + userNameBaru + ", email="
+				+ email + ", password=" + password + ", roleId=" + roleId + ", isLoggedIn=" + isLoggedIn
+				+ ", dateCreated=" + dateCreated + ", status=" + status + ", friendStatus=" + friendStatus + "]";
+	}
+
+	public String getUserNameBaru() {
+		return userNameBaru;
+	}
+
+	public void setUserNameBaru(String userNameBaru) {
+		this.userNameBaru = userNameBaru;
 	}
 
 	public String getFriendStatus() {

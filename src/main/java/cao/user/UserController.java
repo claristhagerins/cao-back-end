@@ -2,6 +2,7 @@ package cao.user;
 
 import java.util.List;
 
+import org.boon.core.Sys;
 import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,20 +51,19 @@ public class UserController {
 
 		UserService usrv = new UserService();
 		ObjectMapper mapper = JsonFactory.create();
-		String userData=null;
-		
+		String userData = null;
+
 		try {
 			if (usrv.getUserByEmail(user.getEmail()).size() > 0) {
 				if (usrv.getPasswordByEmail(user.getEmail()).equals(user.getPassword())) {
 					match = true;
-					usrv.updateUserAfterLogin(user);					
-					
+					usrv.updateUserAfterLogin(user);
+
 					user.setUserId(usrv.getUserByEmail(user.getEmail()).get(0).getUserId());
 					user.setUserName(usrv.getUserByEmail(user.getEmail()).get(0).getUserName());
 					user.setRoleId(usrv.getUserByEmail(user.getEmail()).get(0).getRoleId());
 					user.setStatus("Login Success");
-					
-					
+
 					userData = mapper.writeValueAsString(user);
 					return userData;
 				} else {
@@ -74,6 +74,44 @@ public class UserController {
 			} else {
 				user.setStatus("Wrong Email or Password");
 				userData = mapper.writeValueAsString(user);
+				return userData;
+			}
+		} catch (Exception e) {
+			user.setStatus("System unavailable");
+			userData = mapper.writeValueAsString(user);
+			return userData;
+		}
+	}
+
+	@PostMapping(value = "/changeUsername")
+	public String changeUsername(@RequestBody User user) {
+		boolean match = false;
+
+		UserService usrv = new UserService();
+		ObjectMapper mapper = JsonFactory.create();
+		String userNameLama = user.getUserName();
+		String userNameBaru = user.getUserNameBaru();
+
+		String userData = null;
+		int countMsUser = usrv.checkUserName(userNameBaru);
+		int countRelationship = usrv.checkRelationship(userNameLama);
+		
+		try {
+			if (countMsUser == 0) {
+				// update username
+				usrv.updateUsername(user);
+				
+				if(countRelationship > 0) {
+					usrv.updateRelationship(user);			
+				}
+				
+				String result = "Berhasil di ganti";
+				userData = mapper.writeValueAsString(result);
+				return userData;
+			} else {
+				// return kalo usernamenya udah ada
+				String error = "Username sudah ada";
+				userData = mapper.writeValueAsString(error);
 				return userData;
 			}
 		} catch (Exception e) {
