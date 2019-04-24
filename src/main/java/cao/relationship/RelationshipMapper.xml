@@ -21,10 +21,11 @@
 		select R.user_one_id as friend_id, U.user_name as friend_name 
 		from relationship R
 		left outer join ms_user U on (R.user_one_id=U.user_id)		
-		where R.user_two_id=#{userId} and R.user_two_id='1'
+		where R.user_two_id=#{userId} and R.status_user_two='1'
 		<if test="friendName != null and friendName != ''">
 		and upper(R.user_one_name) like upper('%' || (#{friendName}) || '%')
 		</if>
+		order by friend_name
 	</select>
 
 	<select id="searchFriend" parameterType="String" resultMap="FriendsResult">
