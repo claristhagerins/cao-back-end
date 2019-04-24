@@ -4,7 +4,6 @@ import cao.Base;
 
 public class PollBridge extends Base {
 	private String pollBridgeId;
-	private String voteResultId;
 	private String eventId;
 	private String pollParticipationId;
 	private String pollLocationId;
@@ -28,14 +27,6 @@ public class PollBridge extends Base {
 
 	public void setPollBridgeId(String pollBridgeId) {
 		this.pollBridgeId = pollBridgeId;
-	}
-
-	public String getVoteResultId() {
-		return voteResultId;
-	}
-
-	public void setVoteResultId(String voteResultId) {
-		this.voteResultId = voteResultId;
 	}
 
 	public String getEventId() {

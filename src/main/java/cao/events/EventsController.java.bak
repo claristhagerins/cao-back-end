@@ -172,7 +172,6 @@ public class EventsController {
 		// end flag
 
 		choiceTotal = parameter.getChoice().length;
-		String[] choice = new String[choiceTotal];
 		choice = parameter.getChoice();
 
 		// flag
@@ -234,28 +233,20 @@ public class EventsController {
 		// insert pollLocation. sukses pada case normal
 		if (locationTotal > 0) {
 			parameter.setPrefix(Common.PREFIX_POLL_LOCATION);
-			for(int i=0; i<locationTotal; i++) {
-				if(i==0 && !"".equals(locationName[i])) {
-					pollLocationId = plsrv.getPollLocationId(parameter.getPrefix());
-				}
-				if(!"".equals(locationName[i])) {
-					plsrv.insertPollLocation(pollLocationId, locationName[i], locationContact[i]);
-				}
+			pollLocationId = plsrv.getPollLocationId(parameter.getPrefix());
+			for (int i = 0; i < locationTotal; i++) {
+				plsrv.insertPollLocation(pollLocationId, locationName[i], locationContact[i]);
 			}
 		}
 //		
 		// insert pollDateTime. note: belum ada time
 		if (dateTimeTotal > 0) {
 			parameter.setPrefix(Common.PREFIX_POLL_DATE_TIME);
-			for(int i=0; i<dateTimeTotal; i++) {
-				if(i==0 && !"".equals(eventDate[i])) {
-					pollDateTimeId = pdsrv.getPolldateTimeId(parameter.getPrefix());
-				}
-				if(!"".equals(eventDate[i])) {
-					pdsrv.insertPollDateTime(pollDateTimeId, eventDate[i]
-	//						, startTime[i], endTime[i]
-							);
-				}
+			pollDateTimeId = pdsrv.getPolldateTimeId(parameter.getPrefix());
+			for (int i = 0; i < dateTimeTotal; i++) {
+				pdsrv.insertPollDateTime(pollDateTimeId, eventDate[i]
+//						, startTime[i], endTime[i]
+				);
 			}
 		}
 
@@ -266,13 +257,9 @@ public class EventsController {
 			pqsrv.insertPollQuestion(pollQuestionId, question);
 			// insert choice
 			parameter.setPrefix(Common.PREFIX_CHOICE);
-			for(int i=0; i<choiceTotal; i++) {
-				if(i==0 && !"".equals(choice[i])) {
-					choiceId = csrv.getChoiceId(parameter.getPrefix());
-				}
-				if(!"".equals(choice[i])) {
-					csrv.insertPollChoice(pollQuestionId, question, choiceId, choice[i]);
-				}
+			choiceId = csrv.getChoiceId(parameter.getPrefix());
+			for (int i = 0; i < choiceTotal; i++) {
+				csrv.insertPollChoice(pollQuestionId, question, choiceId, choice[i]);
 			}
 		}
 

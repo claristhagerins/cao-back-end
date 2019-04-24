@@ -46,22 +46,11 @@ public class EventsService {
 	}
 
 	
-	public List<Events> getEventDetailByEventId(String eventId, String pollLocationId,
-			String pollDateTimeId, String choiceId) {
+	public List<Events> getEventDetailByEventId(String eventId) {
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
 		try {
 			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
-			return eventsMapper.getEventDetailByEventId(eventId, pollLocationId, pollDateTimeId, choiceId);
-		} finally {
-			sqlSession.close();
-		}
-	}
-	
-	public List<Map<String,String>> getPollId(String eventId) {
-		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-		try {
-			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
-			return eventsMapper.getPollId(eventId);
+			return eventsMapper.getEventDetailByEventId(eventId);
 		} finally {
 			sqlSession.close();
 		}
