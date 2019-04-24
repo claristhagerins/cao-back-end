@@ -10,8 +10,7 @@
 		<typeAlias type="cao.user.User" alias="User"></typeAlias>
 		<typeAlias type="cao.events.Events" alias="Events"></typeAlias>
 		<typeAlias type="cao.relationship.Relationship" alias="Relationship"></typeAlias>
-		<typeAlias type="cao.pollbridge.PollBridge" alias="PollBridge"></typeAlias>
-		<typeAlias type="cao.voteresult.VoteResult" alias="VoteResult"></typeAlias>
+		<typeAlias type="cao.pollbridge.PollBridge" alias="PollBridge"></typeAlias>		
 	</typeAliases>
 	<environments default="development">
 		<environment id="development">
@@ -34,6 +33,5 @@
 		<mapper resource="cao/pollquestion/PollQuestionMapper.xml" />
 		<mapper resource="cao/choice/ChoiceMapper.xml" />
 		<mapper resource="cao/pollbridge/PollBridgeMapper.xml" />
-		<mapper resource="cao/voteresult/VoteResultMapper.xml" />
 	</mappers>
 </configuration>
