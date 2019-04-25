@@ -58,7 +58,7 @@
 	
 	<select id="getPollId" parameterType="String" resultMap="PollIdResult">
 		select pb.poll_location_id, pb.poll_date_time_id, pb.poll_question_id 
-		from poll_bridge pb where event_id = #{eventId};
+		from poll_bridge pb where event_id = #{eventId}
 	</select>
 	
 		
@@ -117,7 +117,7 @@
 			and pb.poll_question_id = pq.poll_question_id
 			and pb.poll_question_id = c.poll_question_id 
 		</if>
-		and e.event_id = #{eventId};
+		and e.event_id = #{eventId}
 		<!-- select event_id, event_name, event_description, poll_status, poll_condition from events where event_id = (#{eventId}) -->
 	</select>
 	
