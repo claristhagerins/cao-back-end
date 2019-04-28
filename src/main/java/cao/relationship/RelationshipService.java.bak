@@ -1,0 +1,24 @@
+package cao.relationship;
+
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+
+import cao.user.User;
+import cao.user.UserMapper;
+import mybatis.MyBatisUtil;
+
+public class RelationshipService {
+	
+	public List<Relationship> getFriendList(String userId, String friendName) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			RelationshipMapper relationshipMapper = sqlSession.getMapper(RelationshipMapper.class);
+			return relationshipMapper.getFriendList(userId, friendName);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+}

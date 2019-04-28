@@ -20,18 +20,16 @@
 		select GET_ID(#{prefix}) as event_id
 	</select>
 	
+	<insert id="insertVoteResult" parameterType="String" statementType="CALLABLE">
+		INSERT INTO VOTE_RESULT(EVENT_ID, USER_ID)
+		VALUES(#{eventId}, #{pollUserId})
+	</insert>
+	
 	<insert id="insertEvent" parameterType="Events" statementType="CALLABLE">
 		INSERT INTO EVENTS(EVENT_ID, EVENT_NAME, EVENT_DESCRIPTION, POLL_STATUS, POLL_CONDITION, 
 		CREATED_BY, DATE_CREATED, IS_MULTIPLE, POLL_CLOSED_DATE)
 		VALUES(#{eventId}, #{eventName}, #{eventDescription}, #{pollStatus}, #{pollCondition},
 		#{eventCreatedBy}, now(), #{isMultiple}, to_date(#{pollClosedDate}, 'YYYY-MM-DD'))
-	</insert>
-	
-	<insert id="insertVoteResult" parameterType="Events" statementType="CALLABLE">
-		INSERT INTO VOTE_RESULT(EVENT_ID, USER_ID, CHOSEN_DATE_TIME, 
-		CHOSEN_LOCATION_NAME, CHOSEN_CHOICE_NAME)
-		VALUES(#{eventId}, #{pollUserId}, '{"chosenDateTime":[""]}', 
-		'{"chosenLocationName":[""]}', '{"chosenChoiceName":[""]}')
 	</insert>
 	
 	<resultMap type="Events" id="EventsResult">

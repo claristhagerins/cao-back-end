@@ -57,6 +57,14 @@ public class Events extends Base {
 	public void setPollStatus(String pollStatus) {
 		this.pollStatus = pollStatus;
 	}
+	
+	public String getPollCondition() {
+		return pollCondition;
+	}
+
+	public void setPollCondition(String pollCondition) {
+		this.pollCondition = pollCondition;
+	}
 
 	public String getDateCreated() {
 		return dateCreated;

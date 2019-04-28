@@ -1,0 +1,101 @@
+package cao.relationship;
+
+public class Relationship {
+	private String friendId;
+	private String friendName;
+	private String userOneId;
+	private String userOneName;
+	private String userTwoId;
+	private String userTwoName;
+	private String statusUserOne;
+	private String statusUserTwo;
+	private String actionUserId;
+//	private String dateCreate;
+	
+	@Override
+	public String toString() {
+		return "Events [friendId= " + friendId + 
+				", friendName= " + friendName + 
+				", userOneId= " + userOneId + 
+				", userOneName= " + userOneName + 
+				", userTwoId= " + userTwoId + 
+				", userTwoName= " + userTwoName + 
+				", statusUserOne= " + statusUserOne + 
+				", statusUserTwo= " + statusUserTwo + 
+				", actionUserId= " + actionUserId + 
+				"]";
+	}
+
+	public String getFriendId() {
+		return friendId;
+	}
+
+	public void setFriendId(String friendId) {
+		this.friendId = friendId;
+	}
+
+	public String getFriendName() {
+		return friendName;
+	}
+
+	public void setFriendName(String friendName) {
+		this.friendName = friendName;
+	}
+
+	public String getUserOneId() {
+		return userOneId;
+	}
+
+	public void setUserOneId(String userOneId) {
+		this.userOneId = userOneId;
+	}
+
+	public String getUserOneName() {
+		return userOneName;
+	}
+
+	public void setUserOneName(String userOneName) {
+		this.userOneName = userOneName;
+	}
+
+	public String getUserTwoId() {
+		return userTwoId;
+	}
+
+	public void setUserTwoId(String userTwoId) {
+		this.userTwoId = userTwoId;
+	}
+
+	public String getUserTwoName() {
+		return userTwoName;
+	}
+
+	public void setUserTwoName(String userTwoName) {
+		this.userTwoName = userTwoName;
+	}
+
+	public String getStatusUserOne() {
+		return statusUserOne;
+	}
+
+	public void setStatusUserOne(String statusUserOne) {
+		this.statusUserOne = statusUserOne;
+	}
+
+	public String getStatusUserTwo() {
+		return statusUserTwo;
+	}
+
+	public void setStatusUserTwo(String statusUserTwo) {
+		this.statusUserTwo = statusUserTwo;
+	}
+
+	public String getActionUserId() {
+		return actionUserId;
+	}
+
+	public void setActionUserId(String actionUserId) {
+		this.actionUserId = actionUserId;
+	}
+
+}

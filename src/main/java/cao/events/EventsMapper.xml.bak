@@ -58,7 +58,7 @@
 	
 	<select id="getPollId" parameterType="String" resultMap="PollIdResult">
 		select pb.poll_location_id, pb.poll_date_time_id, pb.poll_question_id 
-		from poll_bridge pb where event_id = #{eventId}
+		from poll_bridge pb where event_id = #{eventId};
 	</select>
 	
 		
@@ -117,50 +117,7 @@
 			and pb.poll_question_id = pq.poll_question_id
 			and pb.poll_question_id = c.poll_question_id 
 		</if>
-		and e.event_id = #{eventId}
+		and e.event_id = #{eventId};
 		<!-- select event_id, event_name, event_description, poll_status, poll_condition from events where event_id = (#{eventId}) -->
 	</select>
-	
-	<resultMap type="PollBridge" id="PollBridgeResult">
-		<result property="pollBridgeId" column="poll_bridge_id" />
-		<result property="eventId" column="event_id" />
-		<result property="pollParticipationId" column="poll_participant_id" />
-		<result property="pollLocationId" column="poll_location_id" />
-		<result property="pollDateTimeId" column="poll_date_time_id" />
-		<result property="pollQuestionId" column="poll_question_id" />
-	</resultMap>
-	
-	<select id="getEventBridge" parameterType="String" resultMap="PollBridgeResult">
-		select poll_bridge_id, event_id, poll_participant_id, poll_location_id, poll_date_time_id, poll_question_id 
-		from poll_bridge
-		where event_id=#{eventId}
-	</select>
-	
-	<delete id="deleteEvent" parameterType="String" statementType="CALLABLE">
-		delete from events where event_id=#{eventId}
-	</delete>
-	
-	<delete id="deletePollParticipant" parameterType="String" statementType="CALLABLE">
-		delete from poll_participant where poll_participant_id=#{pollParticipantId}
-	</delete>
-	
-	<delete id="deletePollLocation" parameterType="String" statementType="CALLABLE">
-		delete from poll_location where poll_location_id=#{pollLocationId}
-	</delete>
-	
-	<delete id="deletePollDateTime" parameterType="String" statementType="CALLABLE">
-		delete from poll_date_time where poll_date_time_id=#{pollDateTimeId}
-	</delete>
-	
-	<delete id="deletePollQuestion" parameterType="String" statementType="CALLABLE">
-		delete from poll_question where poll_question_id=#{pollQuestionId}
-	</delete>
-	
-	<delete id="deletePollChoice" parameterType="String" statementType="CALLABLE">
-		delete from choice where poll_question_id=#{pollQuestionId}
-	</delete>
-	
-	<delete id="deletePollBridge" parameterType="String" statementType="CALLABLE">
-		delete from poll_bridge where poll_bridge_id=#{pollBridgeId}
-	</delete>
 </mapper>

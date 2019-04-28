@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cao.relationship.RelationshipMapper">
+	
+	<resultMap type="Relationship" id="FriendsResult">
+		<result property="friendId" column="friend_id" />
+		<result property="friendName" column="friend_name" />
+	</resultMap>
+		
+	<select id="getFriendList" parameterType="String" resultMap="FriendsResult">
+		select R.user_two_id as friend_id, U.user_name as friend_name 
+		from relationship R
+		left outer join ms_user U on (R.user_two_id=U.user_id)
+		where R.user_one_id=#{userId} and R.status_user_one='1'
+		<if test="friendName != null and friendName != ''">
+		and upper(R.user_two_name) like upper('%' || (#{friendName}) || '%')
+		</if>
+		union
+		select R.user_one_id as friend_id, U.user_name as friend_name 
+		from relationship R
+		left outer join ms_user U on (R.user_one_id=U.user_id)		
+		where R.user_two_id=#{userId} and R.user_two_id='1'
+		<if test="friendName != null and friendName != ''">
+		and upper(R.user_one_name) like upper('%' || (#{friendName}) || '%')
+		</if>
+	</select>
+
+	<select id="searchFriend" parameterType="String" resultMap="FriendsResult">
+		select user_id as friend_id, user_name as friend_name
+		from ms_user
+		where UPPER(user_name) like UPPER('%'||#{userName}||'%') and user_id != #{userId}
+		order by user_name asc
+	</select>
+
+	<insert id="addFriend" parameterType="Relationship" statementType="CALLABLE">
+		insert into relationship 
+			values (#{userOneId}, #{userOneName}, #{userTwoId}, #{userTwoName}, #{statusUserOne}, #{statusUserTwo}, #{actionUserId})
+		on conflict (user_one_id, user_two_id)
+		do update set 
+			status_user_one = relationship.status_user_one|#{statusUserOne}, 
+			status_user_two = relationship.status_user_two|#{statusUserTwo},
+			action_user_id =  #{actionUserId}
+	</insert>
+	
+	<update id="deleteFriend" parameterType="Relationship" statementType="CALLABLE">
+		update relationship 
+		set status_user_one = relationship.status_user_one <![CDATA[&]]> #{statusUserOne}, 
+			status_user_two = relationship.status_user_two <![CDATA[&]]> #{statusUserTwo},
+			action_user_id = #{actionUserId}
+		where user_one_id=#{userOneId} and user_two_id=#{userTwoId}
+	</update>
+</mapper>

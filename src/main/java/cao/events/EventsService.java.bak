@@ -46,6 +46,56 @@ public class EventsService {
 	}
 
 	
+	public List<Map<String,String>> getPollId(String eventId) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
+			return eventsMapper.getPollId(eventId);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	public List<Events> getEventListByUserId(String userId) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
+			return eventsMapper.getEventListByUserId(userId);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	public List<Events> getEventListByNameAndDesc(String eventName, String eventDesc) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
+			return eventsMapper.getEventListByNameAndDesc(eventName, eventDesc);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	public List<Events> getEventListByName(String eventName) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
+			return eventsMapper.getEventListByName(eventName);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	public List<Events> getEventListByDescription(String eventDescription) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
+			return eventsMapper.getEventListByDescription(eventDescription);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
 	public List<Events> getEventDetailByEventId(String eventId, String pollLocationId,
 			String pollDateTimeId, String choiceId) {
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
@@ -57,100 +107,4 @@ public class EventsService {
 		}
 	}
 	
-	public List<Map<String,String>> getPollId(String eventId) {
-		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-		try {
-			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
-			return eventsMapper.getPollId(eventId);
-		} finally {
-			sqlSession.close();
-		}
-	}
-	
-	public PollBridge getEventBridge(String eventId) {
-		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-		try {
-			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
-			return eventsMapper.getEventBridge(eventId);
-		} finally {
-			sqlSession.close();
-		}
-	}
-	
-	public void deleteEvent(String eventId) {
-		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-		try {
-			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
-			eventsMapper.deleteEvent(eventId);
-			sqlSession.commit();
-		} finally {
-			sqlSession.close();
-		}
-	}
-	
-	public void deletePollParticipant(String pollParticipantId) {
-		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-		try {
-			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
-			eventsMapper.deletePollParticipant(pollParticipantId);
-			sqlSession.commit();
-		} finally {
-			sqlSession.close();
-		}
-	}
-	
-	public void deletePollLocation(String pollLocationId) {
-		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-		try {
-			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
-			eventsMapper.deletePollLocation(pollLocationId);
-			sqlSession.commit();
-		} finally {
-			sqlSession.close();
-		}
-	}
-	
-	public void deletePollDateTime(String pollDateTimeId) {
-		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-		try {
-			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
-			eventsMapper.deletePollDateTime(pollDateTimeId);
-			sqlSession.commit();
-		} finally {
-			sqlSession.close();
-		}
-	}
-	
-	public void deletePollQuestion(String pollQuestionId) {
-		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-		try {
-			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
-			eventsMapper.deletePollQuestion(pollQuestionId);
-			sqlSession.commit();
-		} finally {
-			sqlSession.close();
-		}
-	}
-	
-	public void deletePollChoice(String pollQuestionId) {
-		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-		try {
-			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
-			eventsMapper.deletePollChoice(pollQuestionId);
-			sqlSession.commit();
-		} finally {
-			sqlSession.close();
-		}
-	}
-	
-	public void deletePollBridge(String pollBridgeId) {
-		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
-		try {
-			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
-			eventsMapper.deletePollBridge(pollBridgeId);
-			sqlSession.commit();
-		} finally {
-			sqlSession.close();
-		}
-	}
 }

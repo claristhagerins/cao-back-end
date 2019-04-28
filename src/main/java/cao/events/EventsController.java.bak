@@ -67,6 +67,8 @@ public class EventsController {
 
 	@PostMapping(value = "/showEventDetail")	
 	public @ResponseBody String showEventDetail(@RequestBody Events events ) {
+		System.out.println("Masuk");
+		
 		HashMap<String, String> event = null;
 		EventsService esrv = new EventsService();
 		List<Map<String, String>> pollIdList=null;
@@ -220,8 +222,26 @@ public class EventsController {
 			pollCondition = "Published";
 		}
 		esrv.insertEvent(eventId, eventName, eventDescription, pollStatus, pollCondition, 
-			eventCreatedBy, isMultiple, pollClosedDate);
-
+				eventCreatedBy, isMultiple, pollClosedDate);
+		//end insert event
+		
+		//insert voteResult
+		if (participantTotal > 0) {
+			for (int i = 0; i < participantTotal; i++) {
+				System.out.println("*****************");
+				System.out.println(eventId);
+				System.out.println(pollUserId[i]);
+				try {
+					esrv.insertVoteResult(eventId, pollUserId[i]);
+				}catch (Exception e) {
+					// TODO: handle exception
+				}
+				System.out.println("insert vote result telah dilakukan");
+			}
+		}
+		//end insert voteResult
+		
+		
 		// insert pollParticipant. sukses pada case normal
 		String pollRoleEventId = "";
 		if (participantTotal > 0) {
@@ -305,6 +325,7 @@ public class EventsController {
 		
 		//DELETE
 		esrv.deleteEvent(pbridge.getEventId());
+		esrv.deleteVoteResult(pbridge.getEventId());
 		esrv.deletePollParticipant(pbridge.getPollParticipationId());
 		
 		if(pbridge.getPollLocationId() != "") {

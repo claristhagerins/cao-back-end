@@ -38,6 +38,16 @@ public class EventsService {
 		}
 	}
 
+	public void insertVoteResult(String eventId, String pollUserId) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			EventsMapper voteResultMapper = sqlSession.getMapper(EventsMapper.class);
+			voteResultMapper.insertVoteResult(eventId, pollUserId);
+		} finally {
+			sqlSession.close();
+		}
+	}
+
 	public List<Events> getEventList(String userId, String eventName, String eventDesc) {
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
 		try {

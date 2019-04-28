@@ -29,6 +29,7 @@ import cao.polldatetime.*;
 import cao.pollquestion.*;
 import cao.pollparticipant.*;
 import cao.choice.*;
+import cao.voteresult.*;
 //import cao.user.UserService;
 import common.Common;
 
@@ -229,11 +230,7 @@ public class EventsController {
 				System.out.println("*****************");
 				System.out.println(eventId);
 				System.out.println(pollUserId[i]);
-				try {
-					esrv.insertVoteResult(eventId, pollUserId[i]);
-				}catch (Exception e) {
-					// TODO: handle exception
-				}
+				esrv.insertVoteResult(eventId, pollUserId[i]);
 				System.out.println("insert vote result telah dilakukan");
 			}
 		}
@@ -323,6 +320,7 @@ public class EventsController {
 		
 		//DELETE
 		esrv.deleteEvent(pbridge.getEventId());
+		esrv.deleteVoteResult(pbridge.getEventId());
 		esrv.deletePollParticipant(pbridge.getPollParticipationId());
 		
 		if(pbridge.getPollLocationId() != "") {
