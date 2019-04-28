@@ -11,8 +11,6 @@ public class CreateNewEventParameter extends Base {
 	private String pollStatus;
 	private String dateCreated;
 	private String createdBy;
-	private String isMultiple;
-	private String pollClosedDate;
 
 	private String pollParticipantId;
 	private String[] userId;
@@ -94,22 +92,6 @@ public class CreateNewEventParameter extends Base {
 
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
-	}
-	
-	public String getIsMultiple() {
-		return isMultiple;
-	}
-
-	public void setIsMultiple(String isMultiple) {
-		this.isMultiple = isMultiple;
-	}
-
-	public String getPollClosedDate() {
-		return pollClosedDate;
-	}
-
-	public void setPollClosedDate(String pollClosedDate) {
-		this.pollClosedDate = pollClosedDate;
 	}
 
 	public String getPollParticipantId() {

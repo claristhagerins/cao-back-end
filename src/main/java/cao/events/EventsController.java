@@ -1,6 +1,7 @@
 package cao.events;
 
 import cao.user.*;
+import cao.voteresult.VoteResultService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,8 +67,6 @@ public class EventsController {
 
 	@PostMapping(value = "/showEventDetail")	
 	public @ResponseBody String showEventDetail(@RequestBody Events events ) {
-		System.out.println("Masuk");
-		
 		HashMap<String, String> event = null;
 		EventsService esrv = new EventsService();
 		List<Map<String, String>> pollIdList=null;
@@ -87,7 +86,7 @@ public class EventsController {
 		}
 		if(null!=pollIdList.get(0).get("PollLocationId")) {
 			pollQuestionId=pollIdList.get(0).get("PollQuestionId");
-		} 
+		}
 		listEvents = esrv.getEventDetailByEventId(events.getEventId(), pollLocationId, pollDateTimeId, pollQuestionId);
 		listResultJson = mapper.writeValueAsString(listEvents);
 		
@@ -96,7 +95,8 @@ public class EventsController {
 
 	@RequestMapping(value = "/createNewEvent", method = RequestMethod.POST)
 	public String createNewEvent(@RequestBody CreateNewEventParameter parameter) {
-		String action = "", eventName = "", eventDescription = "", pollStatus = "", eventCreatedBy = "";
+		String action = "", eventName = "", eventDescription = "", pollStatus = "", 
+				eventCreatedBy = "", isMultiple = "", pollClosedDate = "";
 
 		int participantTotal = 0;
 		String[] pollUserId = {}; // pollUserId[0] adalah inisiator, pollUserId[1] dst adalah voters
@@ -118,6 +118,9 @@ public class EventsController {
 		eventDescription = parameter.getEventDescription();
 		pollStatus = parameter.getPollStatus();
 		eventCreatedBy = parameter.getUserId()[0];
+		
+		isMultiple = parameter.getIsMultiple();
+		pollClosedDate = parameter.getPollClosedDate();
 
 		// flag
 		System.out.println("=====================EVENT");
@@ -190,6 +193,7 @@ public class EventsController {
 		PollDateTimeService pdsrv = new PollDateTimeService();
 		PollQuestionService pqsrv = new PollQuestionService();
 		ChoiceService csrv = new ChoiceService();
+		VoteResultService vsrv = new VoteResultService();
 
 		String eventId = "", pollParticipantId = "", pollLocationId = "", pollDateTimeId = "", pollQuestionId = "",
 				choiceId = "", pollBridgeId = "";
@@ -215,8 +219,27 @@ public class EventsController {
 		} else if ("PUBLISH".equals(action)) {
 			pollCondition = "Published";
 		}
-		esrv.insertEvent(eventId, eventName, eventDescription, pollStatus, pollCondition, eventCreatedBy);
-
+		esrv.insertEvent(eventId, eventName, eventDescription, pollStatus, pollCondition, 
+				eventCreatedBy, isMultiple, pollClosedDate);
+		//end insert event
+		
+		//insert voteResult
+		if (participantTotal > 0) {
+			for (int i = 0; i < participantTotal; i++) {
+				System.out.println("*****************");
+				System.out.println(eventId);
+				System.out.println(pollUserId[i]);
+				try {
+					esrv.insertVoteResult(eventId, pollUserId[i]);
+				}catch (Exception e) {
+					// TODO: handle exception
+				}
+				System.out.println("insert vote result telah dilakukan");
+			}
+		}
+		//end insert voteResult
+		
+		
 		// insert pollParticipant. sukses pada case normal
 		String pollRoleEventId = "";
 		if (participantTotal > 0) {

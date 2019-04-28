@@ -1,6 +1,7 @@
 package cao.events;
 
 import cao.user.*;
+import cao.voteresult.VoteResultService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,8 +67,6 @@ public class EventsController {
 
 	@PostMapping(value = "/showEventDetail")	
 	public @ResponseBody String showEventDetail(@RequestBody Events events ) {
-		System.out.println("Masuk");
-		
 		HashMap<String, String> event = null;
 		EventsService esrv = new EventsService();
 		List<Map<String, String>> pollIdList=null;
@@ -87,7 +86,7 @@ public class EventsController {
 		}
 		if(null!=pollIdList.get(0).get("PollLocationId")) {
 			pollQuestionId=pollIdList.get(0).get("PollQuestionId");
-		} 
+		}
 		listEvents = esrv.getEventDetailByEventId(events.getEventId(), pollLocationId, pollDateTimeId, pollQuestionId);
 		listResultJson = mapper.writeValueAsString(listEvents);
 		
@@ -96,7 +95,8 @@ public class EventsController {
 
 	@RequestMapping(value = "/createNewEvent", method = RequestMethod.POST)
 	public String createNewEvent(@RequestBody CreateNewEventParameter parameter) {
-		String action = "", eventName = "", eventDescription = "", pollStatus = "", eventCreatedBy = "";
+		String action = "", eventName = "", eventDescription = "", pollStatus = "", 
+				eventCreatedBy = "", isMultiple = "", pollClosedDate = "";
 
 		int participantTotal = 0;
 		String[] pollUserId = {}; // pollUserId[0] adalah inisiator, pollUserId[1] dst adalah voters
@@ -118,6 +118,9 @@ public class EventsController {
 		eventDescription = parameter.getEventDescription();
 		pollStatus = parameter.getPollStatus();
 		eventCreatedBy = parameter.getUserId()[0];
+		
+		isMultiple = parameter.getIsMultiple();
+		pollClosedDate = parameter.getPollClosedDate();
 
 		// flag
 		System.out.println("=====================EVENT");
@@ -172,6 +175,7 @@ public class EventsController {
 		// end flag
 
 		choiceTotal = parameter.getChoice().length;
+		String[] choice = new String[choiceTotal];
 		choice = parameter.getChoice();
 
 		// flag
@@ -189,6 +193,7 @@ public class EventsController {
 		PollDateTimeService pdsrv = new PollDateTimeService();
 		PollQuestionService pqsrv = new PollQuestionService();
 		ChoiceService csrv = new ChoiceService();
+		VoteResultService vsrv = new VoteResultService();
 
 		String eventId = "", pollParticipantId = "", pollLocationId = "", pollDateTimeId = "", pollQuestionId = "",
 				choiceId = "", pollBridgeId = "";
@@ -214,7 +219,8 @@ public class EventsController {
 		} else if ("PUBLISH".equals(action)) {
 			pollCondition = "Published";
 		}
-		esrv.insertEvent(eventId, eventName, eventDescription, pollStatus, pollCondition, eventCreatedBy);
+		esrv.insertEvent(eventId, eventName, eventDescription, pollStatus, pollCondition, 
+			eventCreatedBy, isMultiple, pollClosedDate);
 
 		// insert pollParticipant. sukses pada case normal
 		String pollRoleEventId = "";
@@ -233,20 +239,28 @@ public class EventsController {
 		// insert pollLocation. sukses pada case normal
 		if (locationTotal > 0) {
 			parameter.setPrefix(Common.PREFIX_POLL_LOCATION);
-			pollLocationId = plsrv.getPollLocationId(parameter.getPrefix());
-			for (int i = 0; i < locationTotal; i++) {
-				plsrv.insertPollLocation(pollLocationId, locationName[i], locationContact[i]);
+			for(int i=0; i<locationTotal; i++) {
+				if(i==0 && !"".equals(locationName[i])) {
+					pollLocationId = plsrv.getPollLocationId(parameter.getPrefix());
+				}
+				if(!"".equals(locationName[i])) {
+					plsrv.insertPollLocation(pollLocationId, locationName[i], locationContact[i]);
+				}
 			}
 		}
 //		
 		// insert pollDateTime. note: belum ada time
 		if (dateTimeTotal > 0) {
 			parameter.setPrefix(Common.PREFIX_POLL_DATE_TIME);
-			pollDateTimeId = pdsrv.getPolldateTimeId(parameter.getPrefix());
-			for (int i = 0; i < dateTimeTotal; i++) {
-				pdsrv.insertPollDateTime(pollDateTimeId, eventDate[i]
-//						, startTime[i], endTime[i]
-				);
+			for(int i=0; i<dateTimeTotal; i++) {
+				if(i==0 && !"".equals(eventDate[i])) {
+					pollDateTimeId = pdsrv.getPolldateTimeId(parameter.getPrefix());
+				}
+				if(!"".equals(eventDate[i])) {
+					pdsrv.insertPollDateTime(pollDateTimeId, eventDate[i]
+	//						, startTime[i], endTime[i]
+							);
+				}
 			}
 		}
 
@@ -257,9 +271,13 @@ public class EventsController {
 			pqsrv.insertPollQuestion(pollQuestionId, question);
 			// insert choice
 			parameter.setPrefix(Common.PREFIX_CHOICE);
-			choiceId = csrv.getChoiceId(parameter.getPrefix());
-			for (int i = 0; i < choiceTotal; i++) {
-				csrv.insertPollChoice(pollQuestionId, question, choiceId, choice[i]);
+			for(int i=0; i<choiceTotal; i++) {
+				if(i==0 && !"".equals(choice[i])) {
+					choiceId = csrv.getChoiceId(parameter.getPrefix());
+				}
+				if(!"".equals(choice[i])) {
+					csrv.insertPollChoice(pollQuestionId, question, choiceId, choice[i]);
+				}
 			}
 		}
 

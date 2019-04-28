@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import cao.pollbridge.PollBridge;
 import cao.user.User;
 import cao.user.UserMapper;
+import cao.voteresult.VoteResultMapper;
 import mybatis.MyBatisUtil;
 
 public class EventsService {
@@ -24,11 +25,13 @@ public class EventsService {
 	}
 
 	public void insertEvent(String eventId, String eventName, String eventDescription, 
-			String pollStatus, String pollCondition, String eventCreatedBy) {
+			String pollStatus, String pollCondition, String eventCreatedBy, 
+			String isMultiple, String pollClosedDate) {
 		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
 		try {
 			EventsMapper eventMapper = sqlSession.getMapper(EventsMapper.class);
-			eventMapper.insertEvent(eventId, eventName, eventDescription, pollStatus, pollCondition, eventCreatedBy);
+			eventMapper.insertEvent(eventId, eventName, eventDescription, pollStatus, 
+					pollCondition, eventCreatedBy, isMultiple, pollClosedDate);
 			sqlSession.commit();
 		} finally {
 			sqlSession.close();
@@ -82,6 +85,17 @@ public class EventsService {
 		try {
 			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
 			eventsMapper.deleteEvent(eventId);
+			sqlSession.commit();
+		} finally {
+			sqlSession.close();
+		}
+	}
+
+	public void deleteVoteResult(String eventId) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			EventsMapper eventsMapper = sqlSession.getMapper(EventsMapper.class);
+			eventsMapper.deleteVoteResult(eventId);
 			sqlSession.commit();
 		} finally {
 			sqlSession.close();

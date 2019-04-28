@@ -16,6 +16,7 @@ public interface EventsMapper {
 	public List<Events> getEventDetailByEventId(String eventId, String pollLocationId, String pollDateTimeId, String pollQuestionId);
 	public PollBridge getEventBridge(String eventId);
 	public void deleteEvent(String eventId);
+	public void deleteVoteResult(String eventId);
 	public void deletePollParticipant(String pollParticipantId);
 	public void deletePollLocation(String pollLocationId);
 	public void deletePollDateTime(String pollDateTimeId);

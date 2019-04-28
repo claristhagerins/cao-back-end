@@ -10,8 +10,6 @@ public class Events extends Base {
 	private String dateCreated;
 	private String createdBy;
 	private String pollCondition;
-	private String isMultiple;
-	private String pollClosedDate;
 
 	@Override
 	public String toString() {
@@ -76,19 +74,4 @@ public class Events extends Base {
 		this.createdBy = createdBy;
 	}
 
-	public String getIsMultiple() {
-		return isMultiple;
-	}
-
-	public void setIsMultiple(String isMultiple) {
-		this.isMultiple = isMultiple;
-	}
-
-	public String getPollClosedDate() {
-		return pollClosedDate;
-	}
-
-	public void setPollClosedDate(String pollClosedDate) {
-		this.pollClosedDate = pollClosedDate;
-	}
 }

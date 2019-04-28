@@ -8,6 +8,13 @@ public class VoteResult {
 	private String chosenChoiceName;
 	private String numberOfVotersDesc;
 	
+	//flag red
+	private String choiceOfLocation;
+	private String choiceOfAnswer;
+	private String choiceOfDateTime;
+	private String totalVoters;
+	//end flag red
+	
 	private String[] chosenDateTimeArray;
 	private String[] chosenLocationNameArray;
 	private String[] chosenChoiceNameArray;
@@ -47,6 +54,30 @@ public class VoteResult {
 	}
 	public void setNumberOfVotersDesc(String numberOfVotersDesc) {
 		this.numberOfVotersDesc = numberOfVotersDesc;
+	}
+	public String getChoiceOfLocation() {
+		return choiceOfLocation;
+	}
+	public void setChoiceOfLocation(String choiceOfLocation) {
+		this.choiceOfLocation = choiceOfLocation;
+	}
+	public String getChoiceOfAnswer() {
+		return choiceOfAnswer;
+	}
+	public void setChoiceOfAnswer(String choiceOfAnswer) {
+		this.choiceOfAnswer = choiceOfAnswer;
+	}
+	public String getChoiceOfDateTime() {
+		return choiceOfDateTime;
+	}
+	public void setChoiceOfDateTime(String choiceOfDateTime) {
+		this.choiceOfDateTime = choiceOfDateTime;
+	}
+	public String getTotalVoters() {
+		return totalVoters;
+	}
+	public void setTotalVoters(String totalVoters) {
+		this.totalVoters = totalVoters;
 	}
 	public String[] getChosenDateTimeArray() {
 		return chosenDateTimeArray;

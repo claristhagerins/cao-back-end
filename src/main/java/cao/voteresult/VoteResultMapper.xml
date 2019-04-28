@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cao.voteresult.VoteResultMapper">
+	
+	<insert id="insertVoteResult" parameterType="String" statementType="CALLABLE">
+		INSERT INTO VOTE_RESULT(EVENT_ID, USER_ID, CHOSEN_DATE_TIME, 
+		CHOSEN_LOCATION_NAME, CHOSEN_CHOICE_NAME)
+		VALUES(#{eventId}, #{pollUserId}, '{"chosenDateTime":[""]}', 
+		'{"chosenLocationName":[""]}', '{"chosenChoiceName":[""]}')
+	</insert>
+
+	
+	<update id="updateVoteResult" parameterType="String" statementType="CALLABLE">
+		UPDATE VOTE_RESULT SET chosen_date_time = #{inputChosenDateTime}, 
+		chosen_location_name = #{inputChosenLocationName}, 
+		chosen_choice_name = #{inputChosenChoiceName}
+		where event_id = #{eventId} and user_id = #{userId}
+	</update>
+	
+	<resultMap type="HashMap" id="VoteResult">
+		<result property="Event Id" column="event_id" />
+		<result property="Total Voters" column="total_voters" />
+	</resultMap>
+	
+	<select id="getVoteResultList" parameterType="String" resultMap="VoteResult">
+		 select pb.event_id, count(pp.user_id) as total_voters 
+		from poll_bridge pb, poll_participant pp where pb.event_id = #{eventId} 
+		and pb.poll_participant_id = pp.poll_participant_id group by pb.event_id
+		<!-- select event_id, event_name, event_description, poll_status, poll_condition from events where event_id = (#{eventId}) -->
+	</select>
+	
+	<select id="getTotalVoters" parameterType="String" resultType="String">
+		 select count(pp.user_id) as total_voters 
+		from poll_bridge pb, poll_participant pp where pb.event_id = #{eventId} 
+		and pb.poll_participant_id = pp.poll_participant_id group by pb.event_id
+		<!-- select event_id, event_name, event_description, poll_status, poll_condition from events where event_id = (#{eventId}) -->
+	</select>
+	
+	<resultMap type="HashMap" id="ChoiceResult">
+		<result property="ChoiceOfDateTime" column="date_time_list" />
+		<result property="ChoiceOfLocation" column="location_name_list" />
+		<result property="ChoiceOfAnswer" column="choice_name_list" />
+	</resultMap>
+	
+	<select id="getChoices" parameterType="String" resultMap="ChoiceResult">
+		select 
+		(select string_agg(to_char(event_date, 'YYYY-MM-DD'), '~') from poll_date_time pdt 
+		where pdt.poll_date_time_id = pb.poll_date_time_id) as date_time_list,
+		(select string_agg(location_name, '~') from poll_location pl 
+		where pl.poll_location_id = pb.poll_location_id) as location_name_list,
+		(select string_agg(choice_name, '~') as choice_list from choice c 
+		where c.poll_question_id = pb.poll_question_id) as choice_name_list
+		from poll_bridge pb where pb.event_id = #{eventId}
+	</select>
+	
+	<resultMap type="HashMap" id="NumberOfVotersResult">
+		<result property="Number of Voters" column="number_of_voters" />
+	</resultMap>
+	
+	<select id="getNumberOfVoters" parameterType="String" resultType="Integer">
+		 select count(*) as number_of_voters from vote_result where (
+		<if test="chosenCategory != null and chosenCategory == 'chosenDateTime'">
+			chosen_date_time 
+		</if>
+		<if test="chosenCategory != null and chosenCategory == 'chosenLocationName'">
+			chosen_location_name 
+		</if>
+		<if test="chosenCategory != null and chosenCategory == 'chosenChoiceName'">
+			chosen_choice_name 
+		</if>
+		->> #{chosenCategory}) LIKE '%' || #{chosenCategoryName} || '%'
+		<!-- select event_id, event_name, event_description, poll_status, poll_condition from events where event_id = (#{eventId}) -->
+	</select>
+	
+	<resultMap type="HashMap" id="NameOfVotersResult">
+		<result property="Name of Voters" column="name_of_voters" />
+	</resultMap>
+	
+	<select id="getNameOfVoters" parameterType="String" resultMap="NameOfVotersResult">
+		 select mu.user_name as name_of_voters from vote_result vs, ms_user mu 
+		 where vs.user_id = mu.user_id and (
+		<if test="chosenCategory != null and chosenCategory != 'chosenDateTime'">
+			chosen_date_time 
+		</if>
+		<if test="chosenCategory != null and chosenCategory != 'chosenLocationName'">
+			chosen_location_name 
+		</if>
+		<if test="chosenCategory != null and chosenCategory != 'chosenChoiceName'">
+			chosen_choice_name 
+		</if>
+		-> #{chosenCategory})::jsonb ? #{chosenCategoryName}
+		<!-- select event_id, event_name, event_description, poll_status, poll_condition from events where event_id = (#{eventId}) -->
+	</select>
+
+</mapper>

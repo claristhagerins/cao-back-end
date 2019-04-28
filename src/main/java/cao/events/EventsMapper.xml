@@ -21,9 +21,17 @@
 	</select>
 	
 	<insert id="insertEvent" parameterType="Events" statementType="CALLABLE">
-		INSERT INTO EVENTS(EVENT_ID, EVENT_NAME, EVENT_DESCRIPTION, POLL_STATUS, POLL_CONDITION, CREATED_BY, DATE_CREATED)
+		INSERT INTO EVENTS(EVENT_ID, EVENT_NAME, EVENT_DESCRIPTION, POLL_STATUS, POLL_CONDITION, 
+		CREATED_BY, DATE_CREATED, IS_MULTIPLE, POLL_CLOSED_DATE)
 		VALUES(#{eventId}, #{eventName}, #{eventDescription}, #{pollStatus}, #{pollCondition},
-		#{eventCreatedBy}, now())
+		#{eventCreatedBy}, now(), #{isMultiple}, to_date(#{pollClosedDate}, 'YYYY-MM-DD'))
+	</insert>
+	
+	<insert id="insertVoteResult" parameterType="Events" statementType="CALLABLE">
+		INSERT INTO VOTE_RESULT(EVENT_ID, USER_ID, CHOSEN_DATE_TIME, 
+		CHOSEN_LOCATION_NAME, CHOSEN_CHOICE_NAME)
+		VALUES(#{eventId}, #{pollUserId}, '{"chosenDateTime":[""]}', 
+		'{"chosenLocationName":[""]}', '{"chosenChoiceName":[""]}')
 	</insert>
 	
 	<resultMap type="Events" id="EventsResult">
@@ -33,14 +41,18 @@
 		<result property="pollStatus" column="poll_status" />
 		<result property="pollCondition" column="poll_condition" />
 		<result property="createdBy" column="created_by" />
+		<result property="isMultiple" column="is_multiple" />
+		<result property="pollClosedDate" column="poll_closed_date" />
 	</resultMap>
 		
 	<select id="getEventList" parameterType="String" resultMap="EventsResult">
 		SELECT PP.POLL_PARTICIPANT_ID, E.EVENT_ID, E.EVENT_NAME,
-			E.EVENT_DESCRIPTION, E.POLL_STATUS, E.POLL_CONDITION, E.CREATED_BY
+			E.EVENT_DESCRIPTION, E.POLL_STATUS, E.POLL_CONDITION, E.IS_MULTIPLE, 
+			E.POLL_CLOSED_DATE, MU.USER_NAME AS CREATED_BY
 		FROM POLL_PARTICIPANT PP
 			LEFT OUTER JOIN POLL_BRIDGE PB ON (PP.POLL_PARTICIPANT_ID=PB.POLL_PARTICIPANT_ID)
-			LEFT OUTER JOIN EVENTS E ON (PB.EVENT_ID=E.EVENT_ID)
+			LEFT OUTER JOIN EVENTS E ON (PB.EVENT_ID=E.EVENT_ID) 
+			LEFT OUTER JOIN MS_USER MU ON (E.CREATED_BY=MU.USER_ID)
 		WHERE PP.USER_ID=#{userId}	
 		<if test="eventName != null and eventName != ''">
 			AND upper(E.EVENT_NAME) like upper('%' || (#{eventName}) || '%')
@@ -69,6 +81,8 @@
 		<result property="eventCondition" column="poll_condition" />
 		<result property="createdBy" column="created_by" />
 		<result property="dateCreated" column="date_created" />
+		<result property="isMultiple" column="is_multiple" />
+		<result property="pollClosedDate" column="poll_closed_date" />
 		<result property="participants" column="participant_list" />
 		<result property="locations" column="location_list" />
 		<result property="dateChoice" column="event_date_list" />
@@ -79,24 +93,36 @@
 	<select id="getEventDetailByEventId" parameterType="String" resultMap="EventDetailResult">
 		select distinct e.event_name, e.event_description, 
 		(case when e.poll_status = 'P' then 'Public' when e.poll_status = 'F' then 'Private' end) as poll_status,
-		e.poll_condition, 
+		e.poll_condition, e.is_multiple, 
 		(select mu.user_name from ms_user mu where mu.user_id = e.created_by) as created_by,
 		(select to_char(date_created, 'dd-Mon-yyyy') from events ea where ea.event_id = e.event_id) as date_created,
+		(select to_char(poll_closed_date, 'dd-Mon-yyyy') from events ea where ea.event_id = e.event_id) as poll_closed_date,
 		(select string_agg(user_name, '~') from ms_user mu, poll_participant ppa 
 		where ppa.user_id = mu.user_id and ppa.poll_participant_id = pp.poll_participant_id  
 		group by ppa.poll_participant_id) 
 		as participant_list
+		<if test="pollLocationId == ''">
+			, ('') as location_list
+		</if>
 		<if test="pollLocationId != null and pollLocationId != ''">
-			, (select string_agg(location_name||' ('||(case when location_contact='' then 'no contact' else location_contact end)||')', '~') 
+			, (select string_agg(location_name||' ('
+			||(case when location_contact='' then 'no contact' else location_contact end)||')', '~') 
 			 from poll_location pla
 			where pla.poll_location_id = pl.poll_location_id group by pla.poll_location_id) 
 			as location_list
 		</if>
+		<if test="pollDateTimeId == ''">
+			, ('') as event_date_list
+		</if>
 		<if test="pollDateTimeId != null and pollDateTimeId != ''">
-			, (select string_agg(to_char(event_date, 'dd-Mon-yyyy'), '~') from poll_date_time pdta 
+			, (select string_agg(to_char(event_date, 'dd-Mon-yyyy'), '~') 
+			from poll_date_time pdta 
 			where pdta.poll_date_time_id = pdt.poll_date_time_id  
 			group by pdta.poll_date_time_id) 
 			as event_date_list 
+		</if>
+		<if test="pollQuestionId == ''">
+			, ('') as choice_list
 		</if>
 		<if test="pollQuestionId != null and pollQuestionId != ''">
 			, pq.question, 
@@ -131,12 +157,17 @@
 	</resultMap>
 	
 	<select id="getEventBridge" parameterType="String" resultMap="PollBridgeResult">
-		select poll_bridge_id, event_id, poll_participant_id, poll_location_id, poll_date_time_id, poll_question_id 
+		select poll_bridge_id, event_id, poll_participant_id, poll_location_id, 
+		poll_date_time_id, poll_question_id 
 		from poll_bridge
 		where event_id=#{eventId}
 	</select>
 	
 	<delete id="deleteEvent" parameterType="String" statementType="CALLABLE">
+		delete from vote_result where event_id=#{eventId}
+	</delete>
+	
+	<delete id="deleteVoteResult" parameterType="String" statementType="CALLABLE">
 		delete from events where event_id=#{eventId}
 	</delete>
 	
