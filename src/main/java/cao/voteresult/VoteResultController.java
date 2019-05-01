@@ -125,7 +125,6 @@ public class VoteResultController {
 		}
 		finally {
 			try {
-				rs.close();
 				ps.close();
 				conn.close();
 			} catch (SQLException e) {
