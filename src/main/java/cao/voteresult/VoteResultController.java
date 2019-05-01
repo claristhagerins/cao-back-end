@@ -121,18 +121,18 @@ public class VoteResultController {
 		catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			return "SUBMIT VOTE FAILED";
+			return "SUBMIT VOTE FAILED";	
 		}
-//		finally {
-//			try {
-//				rs.close();
-//				ps.close();
-//				conn.close();
-//			} catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
+		finally {
+			try {
+				rs.close();
+				ps.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		//end flag red
 		
 //		try {
