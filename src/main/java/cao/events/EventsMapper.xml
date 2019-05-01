@@ -94,7 +94,7 @@
 		e.poll_condition, e.is_multiple, 
 		(select mu.user_name from ms_user mu where mu.user_id = e.created_by) as created_by,
 		(select to_char(date_created, 'dd-Mon-yyyy') from events ea where ea.event_id = e.event_id) as date_created,
-		(select to_char(poll_closed_date, 'dd-Mon-yyyy') from events ea where ea.event_id = e.event_id) as poll_closed_date,
+		(select to_char(poll_closed_date, 'Day, Month DD, YYYY HH24:MI') from events ea where ea.event_id = e.event_id) as poll_closed_date,
 		(select string_agg(user_name, '~') from ms_user mu, poll_participant ppa 
 		where ppa.user_id = mu.user_id and ppa.poll_participant_id = pp.poll_participant_id  
 		group by ppa.poll_participant_id) 
