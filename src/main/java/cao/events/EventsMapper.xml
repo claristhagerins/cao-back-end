@@ -29,7 +29,7 @@
 		INSERT INTO EVENTS(EVENT_ID, EVENT_NAME, EVENT_DESCRIPTION, POLL_STATUS, POLL_CONDITION, 
 		CREATED_BY, DATE_CREATED, IS_MULTIPLE, POLL_CLOSED_DATE)
 		VALUES(#{eventId}, #{eventName}, #{eventDescription}, #{pollStatus}, #{pollCondition},
-		#{eventCreatedBy}, now(), #{isMultiple}, to_date(#{pollClosedDate}, 'YYYY-MM-DD'))
+		#{eventCreatedBy}, now(), #{isMultiple}, to_date(#{pollClosedDate}, 'Day, Month DD, YYYY HH24:MI'))
 	</insert>
 	
 	<resultMap type="Events" id="EventsResult">
