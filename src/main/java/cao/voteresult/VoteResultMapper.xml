@@ -11,13 +11,16 @@
 		'{"chosenLocationName":[""]}', '{"chosenChoiceName":[""]}')
 	</insert>
 
-	
-	<update id="updateVoteResult" parameterType="String" statementType="CALLABLE">
-		UPDATE VOTE_RESULT SET chosen_date_time = #{inputChosenDateTime}, 
-		chosen_location_name = #{inputChosenLocationName}, 
-		chosen_choice_name = #{inputChosenChoiceName}
-		where event_id = #{eventId} and user_id = #{userId}
-	</update>
+	<insert id="giveVote" parameterType="String" statementType="CALLABLE">
+		insert into vote_result(event_id, user_id, chosen_date_time, chosen_location_name, chosen_choice_name) 
+			values (#{eventId}, #{userId}, CAST(#{inputChosenDateTime} AS json), 
+			CAST(#{inputChosenLocationName} AS json), CAST(#{inputChosenChoiceName} AS json))
+		on conflict (event_id, user_id)
+		do update set 
+			chosen_date_time = CAST(#{inputChosenDateTime} AS json),
+		chosen_location_name = CAST(#{inputChosenLocationName} AS json),
+		chosen_choice_name = CAST(#{inputChosenChoiceName} AS json)
+	</insert>
 	
 	<resultMap type="HashMap" id="VoteResult">
 		<result property="Event Id" column="event_id" />
@@ -71,26 +74,6 @@
 			chosen_choice_name 
 		</if>
 		->> #{chosenCategory}) LIKE '%' || #{chosenCategoryName} || '%'
-		<!-- select event_id, event_name, event_description, poll_status, poll_condition from events where event_id = (#{eventId}) -->
-	</select>
-	
-	<resultMap type="HashMap" id="NameOfVotersResult">
-		<result property="Name of Voters" column="name_of_voters" />
-	</resultMap>
-	
-	<select id="getNameOfVoters" parameterType="String" resultMap="NameOfVotersResult">
-		 select mu.user_name as name_of_voters from vote_result vs, ms_user mu 
-		 where vs.user_id = mu.user_id and (
-		<if test="chosenCategory != null and chosenCategory != 'chosenDateTime'">
-			chosen_date_time 
-		</if>
-		<if test="chosenCategory != null and chosenCategory != 'chosenLocationName'">
-			chosen_location_name 
-		</if>
-		<if test="chosenCategory != null and chosenCategory != 'chosenChoiceName'">
-			chosen_choice_name 
-		</if>
-		-> #{chosenCategory})::jsonb ? #{chosenCategoryName}
 		<!-- select event_id, event_name, event_description, poll_status, poll_condition from events where event_id = (#{eventId}) -->
 	</select>
 

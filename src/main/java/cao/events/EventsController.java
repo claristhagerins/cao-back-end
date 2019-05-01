@@ -224,17 +224,17 @@ public class EventsController {
 				eventCreatedBy, isMultiple, pollClosedDate);
 		//end insert event
 		
-		//insert voteResult
-		if (participantTotal > 0) {
-			for (int i = 0; i < participantTotal; i++) {
-				System.out.println("*****************");
-				System.out.println(eventId);
-				System.out.println(pollUserId[i]);
-				esrv.insertVoteResult(eventId, pollUserId[i]);
-				System.out.println("insert vote result telah dilakukan");
-			}
-		}
-		//end insert voteResult
+//		//insert voteResult
+//		if (participantTotal > 0) {
+//			for (int i = 0; i < participantTotal; i++) {
+//				System.out.println("*****************");
+//				System.out.println(eventId);
+//				System.out.println(pollUserId[i]);
+//				esrv.insertVoteResult(eventId, pollUserId[i]);
+//				System.out.println("insert vote result telah dilakukan");
+//			}
+//		}
+//		//end insert voteResult
 		
 		
 		// insert pollParticipant. sukses pada case normal
