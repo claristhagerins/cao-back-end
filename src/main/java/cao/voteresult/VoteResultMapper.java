@@ -3,8 +3,6 @@ package cao.voteresult;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
-
 import cao.events.Events;
 import cao.user.User;
 

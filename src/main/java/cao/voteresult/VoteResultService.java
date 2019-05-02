@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.json.JSONObject;
 
 import cao.voteresult.VoteResult;
 import cao.voteresult.VoteResultMapper;
