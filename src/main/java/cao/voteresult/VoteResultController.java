@@ -87,9 +87,12 @@ public class VoteResultController {
 		System.out.println("user id: "+userId);
 		
 		//flag red
-		String url = "jdbc:postgresql://localhost:5432/CAO";
-		String user = "postgres";
-		String password = "admin";
+//		String url = "jdbc:postgresql://localhost:5432/CAO";
+//		String user = "postgres";
+//		String password = "admin";
+		String url = "jdbc:postgresql://ec2-50-17-231-192.compute-1.amazonaws.com:5432/d38sp9jmelmpsh";
+		String user = "nyrgciznhfzgya";
+		String password = "416eb867d89c1100e02a0d9c1bbfbd337eb86058ae538b03d4d54fab1fadeea6";
 		Connection conn =null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
