@@ -13,6 +13,7 @@ public class VoteResult {
 	private String choiceOfAnswer;
 	private String choiceOfDateTime;
 	private String totalVoters;
+	private String totalVotedVoters;
 	//end flag red
 	
 	private String[] chosenDateTimeArray;
@@ -96,5 +97,11 @@ public class VoteResult {
 	}
 	public void setChosenChoiceNameArray(String[] chosenChoiceNameArray) {
 		this.chosenChoiceNameArray = chosenChoiceNameArray;
+	}
+	public String getTotalVotedVoters() {
+		return totalVotedVoters;
+	}
+	public void setTotalVotedVoters(String totalVotedVoters) {
+		this.totalVotedVoters = totalVotedVoters;
 	}
 }

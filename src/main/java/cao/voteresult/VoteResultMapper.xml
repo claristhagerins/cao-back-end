@@ -41,6 +41,10 @@
 		<!-- select event_id, event_name, event_description, poll_status, poll_condition from events where event_id = (#{eventId}) -->
 	</select>
 	
+	<select id="getTotalVotedVoters" parameterType="String" resultType="String">
+		select count (user_id) from vote_result where event_id = #{eventId}
+	</select>
+	
 	<resultMap type="HashMap" id="ChoiceResult">
 		<result property="ChoiceOfDateTime" column="date_time_list" />
 		<result property="ChoiceOfLocation" column="location_name_list" />

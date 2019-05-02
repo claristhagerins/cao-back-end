@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
+import org.json.JSONObject;
 
 import cao.voteresult.VoteResult;
 import cao.voteresult.VoteResultMapper;
@@ -25,6 +26,15 @@ public class VoteResultService {
 		try {
 			VoteResultMapper voteResultMapper = sqlSession.getMapper(VoteResultMapper.class);
 			return voteResultMapper.getTotalVoters(eventId);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	public String getTotalVotedVoters(String eventId) {
+		SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory().openSession();
+		try {
+			VoteResultMapper voteResultMapper = sqlSession.getMapper(VoteResultMapper.class);
+			return voteResultMapper.getTotalVotedVoters(eventId);
 		} finally {
 			sqlSession.close();
 		}

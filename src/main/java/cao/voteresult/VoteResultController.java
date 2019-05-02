@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -87,9 +88,9 @@ public class VoteResultController {
 		System.out.println("user id: "+userId);
 		
 		//flag red
-//		String url = "jdbc:postgresql://localhost:5432/CAO";
-//		String user = "postgres";
-//		String password = "admin";
+		// String url = "jdbc:postgresql://localhost:5432/CAO";
+		// String user = "postgres";
+		// String password = "admin";		
 		String url = "jdbc:postgresql://ec2-50-17-231-192.compute-1.amazonaws.com:5432/d38sp9jmelmpsh";
 		String user = "nyrgciznhfzgya";
 		String password = "416eb867d89c1100e02a0d9c1bbfbd337eb86058ae538b03d4d54fab1fadeea6";
@@ -124,17 +125,18 @@ public class VoteResultController {
 		catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			return "SUBMIT VOTE FAILED";	
+			return "SUBMIT VOTE FAILED";
 		}
-		finally {
-			try {
-				ps.close();
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+//		finally {
+//			try {
+//				rs.close();
+//				ps.close();
+//				conn.close();
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 		//end flag red
 		
 //		try {
@@ -215,6 +217,7 @@ public class VoteResultController {
 		}
 		obj.setEventId(eventId);
 		obj.setTotalVoters(vsrv.getTotalVoters(eventId));
+		obj.setTotalVotedVoters(vsrv.getTotalVotedVoters(eventId));
 		obj.setChoiceOfLocation(choiceOfLocationContent);
 		obj.setChoiceOfAnswer(choiceOfAnswerContent);
 		obj.setChoiceOfDateTime(choiceOfDateTimeContent);
